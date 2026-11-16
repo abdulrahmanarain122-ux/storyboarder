@@ -1,0 +1,280 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --canvas-bg: #F8F7F4;
+    --canvas-grid-dot: rgba(24, 24, 27, 0.14);
+    --canvas-grid-line: rgba(24, 24, 27, 0.05);
+    --surface-elevated: #FFFFFF;
+    --surface-muted: #F1EFEA;
+    --ink-primary: #18181B;
+    --ink-secondary: #52525B;
+    --ink-muted: #71717A;
+    --hairline: rgba(24, 24, 27, 0.12);
+    --hairline-strong: rgba(24, 24, 27, 0.22);
+    --accent-vermilion: #C93B1D;
+    --accent-vermilion-hover: #B03217;
+    --accent-vermilion-soft: rgba(201, 59, 29, 0.10);
+  }
+
+  * {
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    background-color: var(--canvas-bg);
+    color: var(--ink-primary);
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  code,
+  kbd {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+/* Swiss Editorial Studio Island & Button Surfaces */
+.glass-panel,
+.editorial-panel {
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--hairline);
+  box-shadow: 0 8px 30px rgba(24, 24, 27, 0.06), 0 1px 2px rgba(24, 24, 27, 0.04);
+}
+
+.glass-panel-subtle,
+.editorial-panel-subtle {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--hairline);
+  box-shadow: 0 2px 10px rgba(24, 24, 27, 0.04);
+}
+
+.glass-button,
+.editorial-button {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--ink-secondary);
+  transition: all 0.15s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.glass-button:hover,
+.editorial-button:hover {
+  background: var(--surface-muted);
+  border-color: var(--hairline);
+  color: var(--ink-primary);
+}
+
+.glass-button:active,
+.editorial-button:active {
+  transform: scale(0.98);
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(24, 24, 27, 0.16);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(24, 24, 27, 0.3);
+}
+
+/* Canvas animations */
+@keyframes pulse-subtle {
+
+  0%,
+  100% {
+    opacity: 0.8;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 3s ease-in-out infinite;
+}
+
+/* Media surface play/pause ripple flash animation */
+@keyframes media-flash {
+  0% {
+    opacity: 0;
+    transform: scale(0.65);
+  }
+
+  30% {
+    opacity: 0.95;
+    transform: scale(1.08);
+  }
+
+  70% {
+    opacity: 0.85;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.18);
+  }
+}
+
+.animate-media-flash {
+  animation: media-flash 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.scalable-player {
+  container-type: inline-size;
+}
+
+/* TipTap Editor ProseMirror Styling */
+.tiptap.ProseMirror {
+  outline: none;
+  min-height: 100%;
+  user-select: text;
+  -webkit-user-select: text;
+  cursor: text;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #18181B;
+}
+
+.tiptap.ProseMirror > *:first-child {
+  margin-top: 0 !important;
+}
+
+.tiptap.ProseMirror p {
+  margin-top: 0;
+  margin-bottom: 0.5em;
+}
+
+.tiptap.ProseMirror p:last-child {
+  margin-bottom: 0;
+}
+
+.tiptap.ProseMirror h1 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  margin-top: 0.6em;
+  margin-bottom: 0.3em;
+  color: #18181B;
+}
+
+.tiptap.ProseMirror h2 {
+  font-size: 1.02rem;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  margin-top: 0.5em;
+  margin-bottom: 0.25em;
+  color: #27272A;
+}
+
+.tiptap.ProseMirror ul {
+  list-style-type: disc;
+  padding-left: 1.25rem;
+  margin-top: 0.25em;
+  margin-bottom: 0.5em;
+}
+
+.tiptap.ProseMirror ol {
+  list-style-type: decimal;
+  padding-left: 1.25rem;
+  margin-top: 0.25em;
+  margin-bottom: 0.5em;
+}
+
+.tiptap.ProseMirror li {
+  margin-bottom: 0.15em;
+}
+
+.tiptap.ProseMirror blockquote {
+  border-left: 2px solid #C93B1D;
+  padding-left: 0.75rem;
+  font-style: italic;
+  color: #52525B;
+  margin: 0.5em 0;
+}
+
+.tiptap.ProseMirror code {
+  background: #F1EFEA;
+  border: 1px solid rgba(24, 24, 27, 0.12);
+  border-radius: 4px;
+  padding: 0.15em 0.35em;
+  font-size: 0.85em;
+  color: #C93B1D;
+}
+
+.tiptap.ProseMirror p.is-editor-empty:first-child::before {
+  color: #A1A1AA;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Interactive Timestamp Badge in Rich-Text Notes */
+.timestamp-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 8px;
+  margin: 1px 4px 1px 0;
+  border-radius: 6px;
+  background: rgba(201, 59, 29, 0.08);
+  border: 1px solid rgba(201, 59, 29, 0.28);
+  color: #C93B1D;
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  pointer-events: auto !important;
+  user-select: none;
+  vertical-align: middle;
+  transition: all 0.15s ease-in-out;
+}
+
+.timestamp-badge:hover {
+  background: #C93B1D;
+  border-color: #C93B1D;
+  color: #FFFFFF;
+  transform: translateY(-1px);
+}
+
+.timestamp-badge:active {
+  transform: translateY(0);
+}
+
+/* Snapshot mode: clean export without UI HUD, selection handles, or controls */
+.is-taking-snapshot .snapshot-hide,
+.is-taking-snapshot [data-snapshot-hide="true"],
+.is-taking-snapshot .selection-transform-box,
+.is-taking-snapshot .card-anchor-port,
+.is-taking-snapshot .minimap-root,
+.is-taking-snapshot .canvas-toolbar-root,
+.is-taking-snapshot .topbar-root,
+.is-taking-snapshot .floating-selection-bar {
+  display: none !important;
+  opacity: 0 !important;
+}

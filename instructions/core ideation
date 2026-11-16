@@ -1,0 +1,105 @@
+# PROJECT SPECIFICATION: Infinite Ideation Canvas (Spatial Board)
+
+## 1. Product Vision
+
+A fluid, infinite 2D canvas ideation and moodboarding tool designed for multimedia:
+
+- Paste images directly from the OS clipboard (Ctrl+V) with smart auto-arrange placement.
+- Drag-and-drop local video/audio files directly from the OS file explorer.
+- Upload video button fallback.
+- Paste web media URLs (YouTube, Vimeo, direct MP4/WebM) with auto-embedded canvas players.
+- Rich-text sticky notes alongside media.
+- Interactive connectors (arrows/curved lines between cards).
+- Full 2D spatial manipulation: bounded zoom, pan, drag, resize, rotate.
+- Local persistence using IndexedDB for binary blobs and board state.
+
+---
+
+## 2. Technical Stack Recommendation
+
+- **Framework:** React + Vite + TypeScript (or Next.js App Router if cloud features come early).
+- **Canvas Math / Viewport:** HTML5 Canvas or SVG container combined with CSS Transforms (`matrix` / `translate3d` + `scale`), or dedicated canvas engines like `@use-gesture/react` + `zustand`.
+- **Media & Blob Storage:** IndexedDB via `idb` or `dexie.js` (storing actual File/Blob objects locally to bypass the 5MB localStorage limit).
+- **Rich Text:** TipTap or Lexical (lightweight headless rich text editor per note card).
+- **Connectors / Lines:** SVG overlay layer calculating cubic bezier anchors (`M x1 y1 C ... x2 y2`) between card boundary points.
+- **Styling:** Tailwind CSS + Radix UI (for floating control menus).
+
+---
+
+## 3. Core Data Schema
+
+### Board Document
+
+```typescript
+interface CanvasBoard {
+  id: string;
+  title: string;
+  viewport: { x: number; y: number; zoom: number }; // zoom clamped [0.15, 3.0]
+  cards: Record<string, CanvasCard>;
+  connections: Connection[];
+  createdAt: number;
+  updatedAt: number;
+}type CardType = 'image' | 'video' | 'audio' | 'embed-url' | 'note';
+
+interface CanvasCard {
+  id: string;
+  type: CardType;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  rotation: number; // degrees (0-360)
+  zIndex: number;
+  
+  // Content payloads
+  blobId?: string;       // key reference inside IndexedDB blob table
+  url?: string;          // remote media URL or embed link
+  content?: string;      // HTML / JSON string for rich text notes
+  
+  // Media playback states
+  playbackState?: {
+    volume: number;      // 0.0 - 1.0
+    isMuted: boolean;
+    playbackRate: number; // 0.5x, 1x, 1.5x, 2x
+    currentTime: number;
+  };
+}
+
+interface Connection {
+  id: string;
+  fromCardId: string;
+  fromAnchor: 'top' | 'right' | 'bottom' | 'left';
+  toCardId: string;
+  toAnchor: 'top' | 'right' | 'bottom' | 'left';
+  label?: string;
+}Infinite Viewport (Pan & Zoom):
+
+Wheel zoom centered around cursor coordinate with limits (MIN_ZOOM = 0.2, MAX_ZOOM = 2.5).
+
+Pan using Middle Click drag or Spacebar + Left Click drag.
+
+Card Manipulation:
+
+Transform controls: 8-point resize bounding box + 1 top rotation handle.
+
+Click to focus brings card to highest zIndex.
+
+Smart Clipboard (Ctrl+V) & Drag-Drop Handling:
+
+Images from clipboard (clipboardData.items): Read blob, store into IndexedDB, instantiate card with natural aspect ratio.
+
+Paste location: Auto-arranged adjacent to the latest selected card or staggered in current viewport center so cards never stack completely on top of each other.
+
+URL paste: Detect YouTube/Vimeo regex or direct .mp4/.webm extension; transform into player card.
+
+File drag-over canvas: Highlight canvas, intercept file drops (video/*, image/*, audio/*), store blobs in IndexedDB.
+
+Media Players:
+
+Minimal native-style floating controls: Play/Pause, scrubber, volume slider, mute toggle, playback speed pill selector (0.5x, 1x, 1.5x, 2x).
+
+Connectors:
+
+Hover card to expose 4 directional anchor ports.
+
+Click-drag anchor port to another card port to snap a bezier arrow.
