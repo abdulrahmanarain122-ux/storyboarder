@@ -135,8 +135,8 @@ export const InfiniteCanvas: React.FC = () => {
 
       const store = useCanvasStore.getState();
 
-      // Spacebar toggles pan & embed card drag mode
-      if (e.code === 'Space' && !e.repeat) {
+      // Spacebar toggles pan & embed card drag mode (ignore Shift+Space which opens Search)
+      if (e.code === 'Space' && !e.shiftKey && !e.ctrlKey && !e.metaKey && !e.altKey && !e.repeat) {
         e.preventDefault();
         setSpacePressed(true);
       }
@@ -174,9 +174,28 @@ export const InfiniteCanvas: React.FC = () => {
         return;
       }
 
-      // Quick Tool & View Shortcuts
-      if (!e.ctrlKey && !e.metaKey && !e.altKey) {
+      // Shift+Z fits all cards to view
+      if (e.shiftKey && !e.ctrlKey && !e.metaKey && !e.altKey && e.key.toLowerCase() === 'z') {
+        e.preventDefault();
+        store.fitToView(window.innerWidth, window.innerHeight);
+        return;
+      }
+
+      // Tab spawns a new Note card
+      if (e.key === 'Tab' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        e.preventDefault();
+        store.addCard('note');
+        return;
+      }
+
+      // Quick Tool, Creation & View Shortcuts
+      if (!e.ctrlKey && !e.metaKey && !e.altKey && !e.shiftKey) {
         const keyLower = e.key.toLowerCase();
+        if (keyLower === 'n') {
+          e.preventDefault();
+          store.addCard('note');
+          return;
+        }
         if (keyLower === 'v') {
           setActiveTool('select');
           return;
@@ -191,6 +210,45 @@ export const InfiniteCanvas: React.FC = () => {
         }
         if (keyLower === 'g') {
           store.toggleGrid();
+          return;
+        }
+        if (keyLower === 't') {
+          store.toggleTheme();
+          return;
+        }
+        if (keyLower === 'i') {
+          e.preventDefault();
+          window.dispatchEvent(new CustomEvent('open-image-upload'));
+          return;
+        }
+        if (keyLower === 'm') {
+          e.preventDefault();
+          window.dispatchEvent(new CustomEvent('open-video-upload'));
+          return;
+        }
+        if (keyLower === 'a') {
+          e.preventDefault();
+          window.dispatchEvent(new CustomEvent('open-audio-upload'));
+          return;
+        }
+        if (keyLower === 'l') {
+          e.preventDefault();
+          window.dispatchEvent(new CustomEvent('open-url-modal'));
+          return;
+        }
+        if (e.key === '=' || e.key === '+') {
+          e.preventDefault();
+          store.zoomIn();
+          return;
+        }
+        if (e.key === '-') {
+          e.preventDefault();
+          store.zoomOut();
+          return;
+        }
+        if (e.key === '0') {
+          e.preventDefault();
+          store.setZoomPercent(100);
           return;
         }
       }

@@ -351,10 +351,15 @@ export const TopBar: React.FC<TopBarProps> = ({ onOpenShortcuts, onOpenSearch })
                       fitToView(window.innerWidth, window.innerHeight);
                       setIsBoardMenuOpen(false);
                     }}
-                    className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-[#18181B] hover:bg-[#F1EFEA] transition-colors"
+                    className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-[#18181B] hover:bg-[#F1EFEA] transition-colors"
                   >
-                    <Maximize2 className="w-3.5 h-3.5 text-[#52525B]" />
-                    <span>Fit All to View</span>
+                    <span className="flex items-center gap-2.5">
+                      <Maximize2 className="w-3.5 h-3.5 text-[#52525B]" />
+                      <span>Fit All to View</span>
+                    </span>
+                    <kbd className="px-1.5 py-0.5 rounded bg-[#F1EFEA] border border-black/10 text-[10px] font-mono text-[#52525B]">
+                      ⇧Z
+                    </kbd>
                   </button>
 
                   <button
@@ -363,10 +368,15 @@ export const TopBar: React.FC<TopBarProps> = ({ onOpenShortcuts, onOpenSearch })
                       resetViewport();
                       setIsBoardMenuOpen(false);
                     }}
-                    className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-[#18181B] hover:bg-[#F1EFEA] transition-colors"
+                    className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-[#18181B] hover:bg-[#F1EFEA] transition-colors"
                   >
-                    <RotateCcw className="w-3.5 h-3.5 text-[#52525B]" />
-                    <span>Reset Zoom (100%)</span>
+                    <span className="flex items-center gap-2.5">
+                      <RotateCcw className="w-3.5 h-3.5 text-[#52525B]" />
+                      <span>Reset Zoom (100%)</span>
+                    </span>
+                    <kbd className="px-1.5 py-0.5 rounded bg-[#F1EFEA] border border-black/10 text-[10px] font-mono text-[#52525B]">
+                      0
+                    </kbd>
                   </button>
 
                   <div className="my-1.5 border-t border-black/10" />
@@ -467,13 +477,13 @@ export const TopBar: React.FC<TopBarProps> = ({ onOpenShortcuts, onOpenSearch })
           <button
             type="button"
             onClick={onOpenSearch}
-            title="Search cards & notes (⌘K / Ctrl+K)"
+            title="Search cards & notes (Shift+Space)"
             className="flex items-center gap-2 px-3 py-1.5 rounded-xl editorial-button text-xs font-medium text-[#18181B]"
           >
             <Search className="w-3.5 h-3.5 text-[#52525B]" />
             <span className="hidden sm:inline text-[#52525B]">Search</span>
             <kbd className="px-1.5 py-0.5 rounded bg-[#F1EFEA] border border-black/10 text-[10px] font-mono text-[#52525B]">
-              ⌘K
+              ⇧Space
             </kbd>
           </button>
         </div>

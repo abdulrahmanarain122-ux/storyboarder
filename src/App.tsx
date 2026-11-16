@@ -29,13 +29,26 @@ export function App() {
     (window as unknown as { __canvasStore: typeof useCanvasStore }).__canvasStore = useCanvasStore;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (
-        useCanvasStore.getState().activeView === 'canvas' &&
-        (e.ctrlKey || e.metaKey) &&
-        e.key.toLowerCase() === 'k'
-      ) {
+      if (useCanvasStore.getState().activeView !== 'canvas') return;
+
+      const target = e.target;
+      const isElement = target instanceof Element;
+      const isTyping =
+        (isElement &&
+          (target.tagName === 'INPUT' ||
+            target.tagName === 'TEXTAREA' ||
+            (target as HTMLElement).isContentEditable ||
+            Boolean(target.closest('input, textarea, [contenteditable="true"], .ProseMirror')))) ||
+        Boolean(useCanvasStore.getState().editingCardId);
+
+      if (isTyping) return;
+
+      if (e.shiftKey && e.code === 'Space') {
         e.preventDefault();
         setSearchOpen((prev) => !prev);
+      } else if (e.key === '?' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        e.preventDefault();
+        setShortcutsOpen((prev) => !prev);
       }
     };
 

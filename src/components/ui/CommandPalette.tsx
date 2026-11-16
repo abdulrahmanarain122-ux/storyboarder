@@ -70,10 +70,20 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     }
   }, [controlledOnOpen]);
 
-  // Global Ctrl+K / Cmd+K shortcut & custom event listener
+  // Global Shift+Space shortcut & custom event listener
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      const target = e.target;
+      const isElement = target instanceof Element;
+      const isTyping =
+        (isElement &&
+          (target.tagName === 'INPUT' ||
+            target.tagName === 'TEXTAREA' ||
+            (target as HTMLElement).isContentEditable ||
+            Boolean(target.closest('input, textarea, [contenteditable="true"], .ProseMirror')))) ||
+        Boolean(useCanvasStore.getState().editingCardId);
+
+      if (e.shiftKey && e.code === 'Space' && !isTyping) {
         e.preventDefault();
         e.stopPropagation();
         if (isOpen) {
@@ -204,7 +214,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
               setSelectedIndex(0);
             }}
             onKeyDown={handleInputKeyDown}
-            placeholder="Search notes, card titles, content, or tags... (⌘K)"
+            placeholder="Search notes, card titles, content, or tags... (⇧Space)"
             className="flex-1 bg-transparent text-sm sm:text-base text-[#18181B] placeholder-[#71717A] outline-none"
           />
           {query && (

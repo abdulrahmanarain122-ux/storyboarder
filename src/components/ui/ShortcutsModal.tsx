@@ -11,22 +11,34 @@ export const ShortcutsModal: React.FC<ShortcutsModalProps> = ({ isOpen, onClose 
 
   const shortcuts = [
     {
-      category: 'Canvas & Navigation',
+      category: 'Create & Add',
       items: [
-        { action: 'Pan Canvas', keys: ['Space + Drag', 'Middle Click'] },
-        { action: 'Zoom In / Out', keys: ['Scroll Wheel', '+ / -'] },
-        { action: 'Select / Hand / Frame Tool', keys: ['V', 'H', 'F'] },
-        { action: 'Toggle Dot Grid', keys: ['G'] },
-        { action: 'Search & Jump', keys: ['⌘K', 'Ctrl + K'] },
+        { action: 'New Note', keys: ['N', 'Tab'] },
+        { action: 'Upload Image', keys: ['I'] },
+        { action: 'Upload Video', keys: ['M'] },
+        { action: 'Upload Audio', keys: ['A'] },
+        { action: 'Add Web Link / Embed', keys: ['L'] },
+        { action: 'Draw Section Frame', keys: ['F'] },
+        { action: 'Paste Image, Text, or Link', keys: ['Ctrl / ⌘ + V'] },
       ],
     },
     {
-      category: 'Cards & Media',
+      category: 'Navigation & View',
       items: [
-        { action: 'Paste Image, Text, or Link', keys: ['⌘V', 'Ctrl + V'] },
-        { action: 'Edit Note Text', keys: ['Double-Click Note'] },
-        { action: 'Duplicate Card', keys: ['⌘D', 'Ctrl + D'] },
-        { action: 'Undo / Redo', keys: ['⌘Z', '⌘⇧Z'] },
+        { action: 'Search & Jump', keys: ['Shift + Space'] },
+        { action: 'Fit All Cards to View', keys: ['Shift + Z'] },
+        { action: 'Pan Canvas', keys: ['Space + Drag', 'Middle Click'] },
+        { action: 'Zoom In / Out / Reset', keys: ['+', '-', '0'] },
+        { action: 'Select / Hand Tool', keys: ['V', 'H'] },
+        { action: 'Toggle Grid / Dark Mode', keys: ['G', 'T'] },
+      ],
+    },
+    {
+      category: 'Edit & Arrange',
+      items: [
+        { action: 'Edit Note / Rename Title', keys: ['Double-Click'] },
+        { action: 'Duplicate Selected', keys: ['Ctrl / ⌘ + D'] },
+        { action: 'Undo / Redo', keys: ['Ctrl / ⌘ + Z', '⇧Z / Y'] },
         { action: 'Delete Selected', keys: ['Delete', 'Backspace'] },
       ],
     },
