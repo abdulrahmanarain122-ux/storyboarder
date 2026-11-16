@@ -119,12 +119,20 @@ export const CanvasFrameItem: React.FC<CanvasFrameItemProps> = ({
           left: 16,
         }}
         onPointerDown={(e) => {
+          if (isEditingTitle) {
+            e.stopPropagation();
+            return;
+          }
           if (e.button === 0) {
             onSelect(e);
             onStartDrag(frame.id, e);
           }
         }}
-        className="flex items-center gap-2 px-3 py-1 rounded-xl bg-white border border-black/20 text-[#18181B] shadow-sm cursor-grab active:cursor-grabbing hover:border-black/35 transition-all z-10"
+        className={`flex items-center gap-2 px-3 py-1 rounded-xl bg-white border border-black/20 text-[#18181B] shadow-sm transition-all z-10 ${
+          isEditingTitle
+            ? 'cursor-default border-[#C93B1D]'
+            : 'cursor-grab active:cursor-grabbing hover:border-black/35'
+        }`}
       >
         {styleVariant === 'storyboard' ? (
           <span
@@ -204,11 +212,12 @@ export const CanvasFrameItem: React.FC<CanvasFrameItemProps> = ({
           </div>
         )}
 
-        {/* Collapse button always available; extra actions only when selected */}
-        <div
-          className="flex items-center gap-0.5 pl-1 border-l border-black/8"
-          onPointerDown={(e) => e.stopPropagation()}
-        >
+        {/* Action buttons hidden while editing title so the pill focuses solely on renaming */}
+        {!isEditingTitle && (
+          <div
+            className="flex items-center gap-0.5 pl-1 border-l border-black/8"
+            onPointerDown={(e) => e.stopPropagation()}
+          >
           <button
             type="button"
             onClick={() => toggleFrameCollapse(frame.id)}
@@ -296,7 +305,8 @@ export const CanvasFrameItem: React.FC<CanvasFrameItemProps> = ({
               </button>
             </>
           )}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* Edge Resize Strips + 4 Corner Resize Handles */}

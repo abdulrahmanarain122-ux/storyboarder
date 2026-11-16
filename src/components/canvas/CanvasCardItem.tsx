@@ -143,13 +143,19 @@ export const CanvasCardItem: React.FC<CanvasCardItemProps> = memo(({
         {/* Top Header / Bar (Dedicated drag anchor for notes and media) */}
         <div
           onPointerDown={(e) => {
+            if (isRenamingTitle) {
+              e.stopPropagation();
+              return;
+            }
             // Header is always draggable, even in edit mode
             if (e.button === 0) {
               onSelect(e);
               onStartDrag(card.id, e);
             }
           }}
-          className="flex items-center justify-between px-3.5 py-2 border-b border-black/6 shrink-0 cursor-grab active:cursor-grabbing select-none"
+          className={`flex items-center justify-between px-3.5 py-2 border-b border-black/6 shrink-0 select-none ${
+            isRenamingTitle ? 'cursor-default' : 'cursor-grab active:cursor-grabbing'
+          }`}
         >
           <div className="flex items-center gap-2 overflow-hidden pr-2 flex-1 min-w-0">
             <span className="shrink-0 opacity-75">{getCardIcon()}</span>
@@ -215,24 +221,26 @@ export const CanvasCardItem: React.FC<CanvasCardItemProps> = memo(({
             )}
           </div>
 
-          <div className="flex items-center gap-1.5 shrink-0">
-            {/* Interactive Note Jump Button (Linked Note to Video Timestamp) */}
-            {card.type === 'note' && card.metadata?.sourceCardId && card.metadata?.timestamp !== undefined && (
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  seekMedia(card.metadata!.sourceCardId as string, card.metadata!.timestamp as number);
-                }}
-                className="px-2 py-0.5 rounded-md bg-[#C93B1D]/10 hover:bg-[#C93B1D] text-[#C93B1D] hover:text-white text-[10px] font-mono border border-[#C93B1D]/25 transition-colors flex items-center gap-1 cursor-pointer group/btn"
-                title="Jump to linked video timestamp"
-              >
-                <Play className="w-2.5 h-2.5 fill-current" />
-                <span>Jump</span>
-              </button>
-            )}
-            <GripHorizontal className="w-3.5 h-3.5 text-[#A1A1AA] opacity-0 group-hover:opacity-100 transition-opacity" />
-          </div>
+          {!isRenamingTitle && (
+            <div className="flex items-center gap-1.5 shrink-0">
+              {/* Interactive Note Jump Button (Linked Note to Video Timestamp) */}
+              {card.type === 'note' && card.metadata?.sourceCardId && card.metadata?.timestamp !== undefined && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    seekMedia(card.metadata!.sourceCardId as string, card.metadata!.timestamp as number);
+                  }}
+                  className="px-2 py-0.5 rounded-md bg-[#C93B1D]/10 hover:bg-[#C93B1D] text-[#C93B1D] hover:text-white text-[10px] font-mono border border-[#C93B1D]/25 transition-colors flex items-center gap-1 cursor-pointer group/btn"
+                  title="Jump to linked video timestamp"
+                >
+                  <Play className="w-2.5 h-2.5 fill-current" />
+                  <span>Jump</span>
+                </button>
+              )}
+              <GripHorizontal className="w-3.5 h-3.5 text-[#A1A1AA] opacity-0 group-hover:opacity-100 transition-opacity" />
+            </div>
+          )}
         </div>
 
         {/* Saved Bookmark Chips Bar on Video & Embed Cards */}
