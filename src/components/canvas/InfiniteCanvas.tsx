@@ -893,9 +893,13 @@ export const InfiniteCanvas: React.FC = () => {
 
     window.addEventListener('pointermove', handleWindowPointerMove);
     window.addEventListener('pointerup', handleWindowPointerUp);
+    window.addEventListener('pointercancel', handleWindowPointerUp);
+    window.addEventListener('blur', handleWindowPointerUp as unknown as EventListener);
     return () => {
       window.removeEventListener('pointermove', handleWindowPointerMove);
       window.removeEventListener('pointerup', handleWindowPointerUp);
+      window.removeEventListener('pointercancel', handleWindowPointerUp);
+      window.removeEventListener('blur', handleWindowPointerUp as unknown as EventListener);
     };
   }, [
     panBy,

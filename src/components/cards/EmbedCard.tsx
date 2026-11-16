@@ -290,9 +290,10 @@ export const EmbedCard: React.FC<EmbedCardProps> = ({ card, isSelected }) => {
   };
 
   // Surface pointer handlers on transparent interceptor shield
-  // (Allows dragging the card on drag, while toggling Play/Pause on click)
+  // (Clicking the video surface toggles Play/Pause without triggering card drag; drag via card header)
   const handleSurfacePointerDown = (e: React.PointerEvent) => {
     if (e.button === 0) {
+      e.stopPropagation();
       pointerDownPos.current = { x: e.clientX, y: e.clientY };
       pointerDownTime.current = Date.now();
     }
