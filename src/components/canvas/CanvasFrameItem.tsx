@@ -128,7 +128,7 @@ export const CanvasFrameItem: React.FC<CanvasFrameItemProps> = ({
             onStartDrag(frame.id, e);
           }
         }}
-        className={`flex items-center gap-2 px-3 py-1 rounded-xl bg-white border border-black/20 text-[#18181B] shadow-sm transition-all z-10 ${
+        className={`flex items-center gap-2 px-3 py-1 rounded-xl bg-white border border-black/20 text-[#18181B] shadow-sm transition-all z-20 ${
           isEditingTitle
             ? 'cursor-default border-[#C93B1D]'
             : 'cursor-grab active:cursor-grabbing hover:border-black/35'
@@ -309,7 +309,7 @@ export const CanvasFrameItem: React.FC<CanvasFrameItemProps> = ({
         )}
       </div>
 
-      {/* Edge Resize Strips + 4 Corner Resize Handles */}
+      {/* Edge Resize Strips (z-[5] so header pill at z-20 always takes priority) + 4 Corner Resize Handles */}
       {isSelected && !isCollapsed && (
         <>
           {EDGE_ZONES.map(({ handle, className, cursor }) => (
@@ -319,7 +319,7 @@ export const CanvasFrameItem: React.FC<CanvasFrameItemProps> = ({
                 e.stopPropagation();
                 onResizeHandlePointerDown(frame.id, handle, e);
               }}
-              className={`absolute pointer-events-auto z-10 ${className} ${cursor}`}
+              className={`absolute pointer-events-auto z-[5] ${className} ${cursor}`}
             />
           ))}
           {CORNER_HANDLES.map(({ handle, style, cursor }) => (
@@ -330,7 +330,7 @@ export const CanvasFrameItem: React.FC<CanvasFrameItemProps> = ({
                 e.stopPropagation();
                 onResizeHandlePointerDown(frame.id, handle, e);
               }}
-              className="absolute w-2.5 h-2.5 bg-white border-[1.5px] rounded-xs shadow-xs hover:scale-125 transition-transform pointer-events-auto z-20"
+              className="absolute w-2.5 h-2.5 bg-white border-[1.5px] rounded-xs shadow-xs hover:scale-125 transition-transform pointer-events-auto z-30"
             />
           ))}
         </>
