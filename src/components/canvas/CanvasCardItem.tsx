@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 import type { AnchorPosition, CanvasCard, ResizeHandle } from '../../types/canvas';
 import { CardTransformBox } from './CardTransformBox';
 import { CardAnchorPorts } from './CardAnchorPorts';
@@ -15,6 +15,8 @@ import {
   Bookmark,
   Play,
   X,
+  Edit2,
+  Check,
 } from 'lucide-react';
 import { InstagramIcon } from '../ui/InstagramIcon';
 import { useCanvasStore } from '../../store/canvasStore';
@@ -46,10 +48,23 @@ export const CanvasCardItem: React.FC<CanvasCardItemProps> = memo(({
 }) => {
   const editingCardId = useCanvasStore((s) => s.editingCardId);
   const setEditingCardId = useCanvasStore((s) => s.setEditingCardId);
+  const updateCard = useCanvasStore((s) => s.updateCard);
   const autoSyncMediaAspectRatio = useCanvasStore((s) => s.autoSyncMediaAspectRatio);
   const seekMedia = useCanvasStore((s) => s.seekMedia);
   const deleteBookmark = useCanvasStore((s) => s.deleteBookmark);
   const isEditing = editingCardId === card.id;
+
+  const [isRenamingTitle, setIsRenamingTitle] = useState(false);
+  const [titleDraft, setTitleDraft] = useState(card.title);
+
+  const commitTitle = () => {
+    if (titleDraft.trim()) {
+      updateCard(card.id, { title: titleDraft.trim() });
+    } else {
+      setTitleDraft(card.title);
+    }
+    setIsRenamingTitle(false);
+  };
 
   const displayAngle = currentAngle !== undefined ? currentAngle : card.rotation;
 
@@ -114,8 +129,8 @@ export const CanvasCardItem: React.FC<CanvasCardItemProps> = memo(({
       <div
         className={`w-full h-full min-h-0 rounded-2xl overflow-hidden [clip-path:inset(0_round_16px)] flex flex-col bg-[#FFFFFF] relative transition-all duration-200 ${
           isSelected
-            ? 'shadow-[0_14px_40px_rgba(24,24,27,0.12)]'
-            : 'border border-black/12 shadow-[0_4px_20px_rgba(24,24,27,0.05)] hover:border-black/25 hover:shadow-[0_8px_28px_rgba(24,24,27,0.08)]'
+            ? 'shadow-[0_14px_40px_rgba(24,24,27,0.14)]'
+            : 'border border-black/15 shadow-[0_4px_20px_rgba(24,24,27,0.06)] hover:border-black/30 hover:shadow-[0_8px_28px_rgba(24,24,27,0.09)]'
         }`}
         style={{
           borderColor: card.color && !isSelected ? `${card.color}55` : undefined,
@@ -136,11 +151,68 @@ export const CanvasCardItem: React.FC<CanvasCardItemProps> = memo(({
           }}
           className="flex items-center justify-between px-3.5 py-2 border-b border-black/6 shrink-0 cursor-grab active:cursor-grabbing select-none"
         >
-          <div className="flex items-center gap-2 overflow-hidden pr-2">
+          <div className="flex items-center gap-2 overflow-hidden pr-2 flex-1 min-w-0">
             <span className="shrink-0 opacity-75">{getCardIcon()}</span>
-            <span className="text-xs font-medium text-[#18181B] truncate tracking-tight">
-              {card.title}
-            </span>
+            {isRenamingTitle ? (
+              <div
+                className="flex items-center gap-1 flex-1 min-w-0"
+                onPointerDown={(e) => e.stopPropagation()}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <input
+                  type="text"
+                  autoFocus
+                  value={titleDraft}
+                  onChange={(e) => setTitleDraft(e.target.value)}
+                  onBlur={commitTitle}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') commitTitle();
+                    if (e.key === 'Escape') {
+                      setTitleDraft(card.title);
+                      setIsRenamingTitle(false);
+                    }
+                  }}
+                  className="w-full min-w-0 bg-[#F8F7F4] border border-[#C93B1D] rounded px-1.5 py-0.5 text-xs font-medium text-[#18181B] outline-none"
+                />
+                <button
+                  type="button"
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    commitTitle();
+                  }}
+                  className="p-0.5 rounded text-emerald-700 hover:bg-[#F1EFEA] shrink-0"
+                >
+                  <Check className="w-3 h-3" />
+                </button>
+              </div>
+            ) : (
+              <div
+                className="flex items-center gap-1.5 min-w-0 flex-1"
+                onDoubleClick={(e) => {
+                  e.stopPropagation();
+                  setTitleDraft(card.title);
+                  setIsRenamingTitle(true);
+                }}
+                title="Double-click to rename"
+              >
+                <span className="text-xs font-medium text-[#18181B] truncate tracking-tight">
+                  {card.title}
+                </span>
+                <button
+                  type="button"
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setTitleDraft(card.title);
+                    setIsRenamingTitle(true);
+                  }}
+                  title="Rename"
+                  className="p-0.5 rounded text-[#71717A] hover:text-[#18181B] opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
+                >
+                  <Edit2 className="w-2.5 h-2.5" />
+                </button>
+              </div>
+            )}
           </div>
 
           <div className="flex items-center gap-1.5 shrink-0">

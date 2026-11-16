@@ -9,6 +9,7 @@ import {
   Crosshair,
   LayoutGrid,
   Palette,
+  Edit2,
 } from 'lucide-react';
 
 interface CanvasFrameItemProps {
@@ -93,13 +94,13 @@ export const CanvasFrameItem: React.FC<CanvasFrameItemProps> = ({
         width: `${frame.width}px`,
         height: isCollapsed ? '52px' : `${frame.height}px`,
         zIndex: frame.zIndex ?? 0,
-        borderColor: isSelected ? accentColor : `${accentColor}30`,
+        borderColor: isSelected ? accentColor : `${accentColor}75`,
         backgroundColor:
           styleVariant === 'cluster'
-            ? `${accentColor}0A`
+            ? `${accentColor}14`
             : isCollapsed
             ? '#FFFFFF'
-            : `${accentColor}03`,
+            : 'rgba(241, 239, 234, 0.72)',
       }}
       onPointerDown={(e) => {
         if (e.button === 0) {
@@ -107,8 +108,8 @@ export const CanvasFrameItem: React.FC<CanvasFrameItemProps> = ({
         }
       }}
       className={`group rounded-2xl transition-[border-color,background-color,height] duration-200 select-none ${
-        styleVariant === 'cluster' ? 'border border-solid' : 'border border-dashed'
-      } ${isSelected ? 'shadow-sm' : 'hover:border-black/25'}`}
+        styleVariant === 'cluster' ? 'border-[1.5px] border-solid' : 'border-[1.5px] border-dashed'
+      } ${isSelected ? 'shadow-md' : 'hover:border-black/45'}`}
     >
       {/* Minimal Section Header Pill */}
       <div
@@ -123,7 +124,7 @@ export const CanvasFrameItem: React.FC<CanvasFrameItemProps> = ({
             onStartDrag(frame.id, e);
           }
         }}
-        className="flex items-center gap-2 px-2.5 py-1 rounded-xl bg-white border border-black/12 text-[#18181B] shadow-xs cursor-grab active:cursor-grabbing hover:border-black/25 transition-all z-10"
+        className="flex items-center gap-2 px-3 py-1 rounded-xl bg-white border border-black/20 text-[#18181B] shadow-sm cursor-grab active:cursor-grabbing hover:border-black/35 transition-all z-10"
       >
         {styleVariant === 'storyboard' ? (
           <span
@@ -150,6 +151,7 @@ export const CanvasFrameItem: React.FC<CanvasFrameItemProps> = ({
               autoFocus
               value={titleInput}
               onChange={(e) => setTitleInput(e.target.value)}
+              onBlur={handleTitleSubmit}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') handleTitleSubmit();
                 if (e.key === 'Escape') {
@@ -157,11 +159,14 @@ export const CanvasFrameItem: React.FC<CanvasFrameItemProps> = ({
                   setIsEditingTitle(false);
                 }
               }}
-              className="bg-[#F8F7F4] border border-[#C93B1D] rounded px-1.5 py-0.5 text-xs text-[#18181B] outline-none w-32"
+              className="bg-[#F8F7F4] border border-[#C93B1D] rounded px-1.5 py-0.5 text-xs font-semibold text-[#18181B] outline-none w-36"
             />
             <button
               type="button"
-              onClick={handleTitleSubmit}
+              onMouseDown={(e) => {
+                e.preventDefault();
+                handleTitleSubmit();
+              }}
               className="p-0.5 rounded hover:bg-[#F1EFEA] text-emerald-700"
             >
               <Check className="w-3 h-3" />
@@ -171,15 +176,29 @@ export const CanvasFrameItem: React.FC<CanvasFrameItemProps> = ({
           <div
             onDoubleClick={(e) => {
               e.stopPropagation();
+              setTitleInput(frame.title);
               setIsEditingTitle(true);
             }}
-            className="flex items-center gap-1.5 cursor-pointer"
+            className="flex items-center gap-1.5 cursor-pointer group/title"
             title="Double-click to rename"
           >
-            <span className="text-xs font-medium text-[#18181B] tracking-tight max-w-[200px] truncate">
+            <span className="text-xs font-semibold text-[#18181B] tracking-tight max-w-[200px] truncate">
               {frame.title}
             </span>
-            <span className="text-[10px] font-mono text-[#71717A]">
+            <button
+              type="button"
+              onPointerDown={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                setTitleInput(frame.title);
+                setIsEditingTitle(true);
+              }}
+              title="Rename section"
+              className="p-0.5 rounded text-[#71717A] hover:text-[#18181B] opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              <Edit2 className="w-2.5 h-2.5" />
+            </button>
+            <span className="text-[10px] font-mono text-[#52525B] bg-[#F1EFEA] px-1.5 py-0.5 rounded">
               {containedCount}
             </span>
           </div>
