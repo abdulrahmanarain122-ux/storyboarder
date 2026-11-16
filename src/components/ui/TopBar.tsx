@@ -24,6 +24,8 @@ import {
   Undo2,
   Redo2,
   ChevronLeft,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import { InstagramIcon } from './InstagramIcon';
 
@@ -57,6 +59,8 @@ export const TopBar: React.FC<TopBarProps> = ({ onOpenShortcuts, onOpenSearch })
   const duplicateBoard = useCanvasStore((s) => s.duplicateBoard);
   const deleteBoard = useCanvasStore((s) => s.deleteBoard);
   const captureSnapshot = useCanvasStore((s) => s.captureSnapshot);
+  const theme = useCanvasStore((s) => s.theme);
+  const toggleTheme = useCanvasStore((s) => s.toggleTheme);
   const undo = useCanvasStore((s) => s.undo);
   const redo = useCanvasStore((s) => s.redo);
   const canUndo = useCanvasStore((s) => s.historyPast.length > 0);
@@ -421,8 +425,23 @@ export const TopBar: React.FC<TopBarProps> = ({ onOpenShortcuts, onOpenSearch })
           </div>
         </div>
 
-        {/* TOP-RIGHT ISLAND: Undo/Redo + Search */}
+        {/* TOP-RIGHT ISLAND: Undo/Redo + Theme + Search */}
         <div className="flex items-center gap-1 p-1.5 rounded-2xl editorial-panel pointer-events-auto">
+          <button
+            type="button"
+            onClick={toggleTheme}
+            title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            className="flex items-center justify-center w-8 h-8 rounded-xl editorial-button"
+          >
+            {theme === 'dark' ? (
+              <Sun className="w-3.5 h-3.5 text-amber-400" />
+            ) : (
+              <Moon className="w-3.5 h-3.5" />
+            )}
+          </button>
+
+          <div className="w-[1px] h-5 bg-black/10 mx-0.5" />
+
           <button
             type="button"
             onClick={undo}

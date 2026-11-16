@@ -14,6 +14,8 @@ import {
   Check,
   Search,
   ArrowUpRight,
+  Sun,
+  Moon,
 } from 'lucide-react';
 
 function formatRelativeTime(timestamp: number): string {
@@ -156,6 +158,8 @@ export const ProjectsHome: React.FC = () => {
 
   const availableBoards = useCanvasStore((s) => s.availableBoards);
   const saveStatus = useCanvasStore((s) => s.saveStatus);
+  const theme = useCanvasStore((s) => s.theme);
+  const toggleTheme = useCanvasStore((s) => s.toggleTheme);
   const openProject = useCanvasStore((s) => s.openProject);
   const createBoard = useCanvasStore((s) => s.createBoard);
   const renameBoard = useCanvasStore((s) => s.renameBoard);
@@ -212,7 +216,13 @@ export const ProjectsHome: React.FC = () => {
   };
 
   return (
-    <div className="w-screen h-screen overflow-y-auto bg-[#F8F7F4] text-[#18181B] select-none">
+    <div
+      className={`w-screen h-screen overflow-y-auto select-none transition-colors duration-200 ${
+        theme === 'dark'
+          ? 'bg-[#121215] text-[#F4F4F5]'
+          : 'bg-[#F8F7F4] text-[#18181B]'
+      }`}
+    >
       <input
         ref={importInputRef}
         type="file"
@@ -227,10 +237,23 @@ export const ProjectsHome: React.FC = () => {
           <div className="w-8 h-8 rounded-xl bg-[#C93B1D] flex items-center justify-center shadow-xs">
             <Layers className="w-4 h-4 text-white" />
           </div>
-          <span className="font-bold text-base tracking-tight text-[#18181B]">Storyboarder</span>
+          <span className="font-bold text-base tracking-tight">Storyboarder</span>
         </div>
 
         <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={toggleTheme}
+            title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            className="flex items-center justify-center w-9 h-9 rounded-xl bg-white border border-black/12 hover:border-black/25 text-[#18181B] transition-all"
+          >
+            {theme === 'dark' ? (
+              <Sun className="w-4 h-4 text-amber-500" />
+            ) : (
+              <Moon className="w-4 h-4 text-[#52525B]" />
+            )}
+          </button>
+
           <button
             type="button"
             onClick={() => importInputRef.current?.click()}
@@ -276,7 +299,7 @@ export const ProjectsHome: React.FC = () => {
               )}
             </span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#18181B]">
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">
             Projects
           </h1>
         </div>

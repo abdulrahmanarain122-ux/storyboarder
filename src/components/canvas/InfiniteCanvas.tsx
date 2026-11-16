@@ -35,6 +35,7 @@ export const InfiniteCanvas: React.FC = () => {
   const frames = useCanvasStore((s) => s.frames);
   const selectedFrameId = useCanvasStore((s) => s.selectedFrameId);
   const activeTool = useCanvasStore((s) => s.activeTool);
+  const theme = useCanvasStore((s) => s.theme);
   const isSpacePressed = useCanvasStore((s) => s.isSpacePressed);
   const showGrid = useCanvasStore((s) => s.showGrid);
   const isDraggingFilesOver = useCanvasStore((s) => s.isDraggingFilesOver);
@@ -940,7 +941,9 @@ export const InfiniteCanvas: React.FC = () => {
       onDragLeave={handleDragLeave}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
-      className={`relative w-full h-full overflow-hidden select-none touch-none bg-[#F8F7F4] ${getCursorClass()}`}
+      className={`relative w-full h-full overflow-hidden select-none touch-none transition-colors duration-200 ${
+        theme === 'dark' ? 'bg-[#121215]' : 'bg-[#F8F7F4]'
+      } ${getCursorClass()}`}
     >
       {/* Infinite Grid Background (SVG Pattern) */}
       {showGrid && (
@@ -960,7 +963,7 @@ export const InfiniteCanvas: React.FC = () => {
                 cx={gridStep / 2}
                 cy={gridStep / 2}
                 r={clamp(1.1 * Math.sqrt(viewport.zoom), 0.75, 2.0)}
-                fill="rgba(24, 24, 27, 0.14)"
+                fill={theme === 'dark' ? 'rgba(255, 255, 255, 0.16)' : 'rgba(24, 24, 27, 0.14)'}
               />
             </pattern>
           </defs>

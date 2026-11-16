@@ -14,7 +14,12 @@ export function App() {
   const [searchOpen, setSearchOpen] = useState(false);
 
   const activeView = useCanvasStore((s) => s.activeView);
+  const theme = useCanvasStore((s) => s.theme);
   const initDB = useCanvasStore((s) => s.initDB);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+  }, [theme]);
 
   useEffect(() => {
     initDB();
@@ -60,7 +65,7 @@ export function App() {
   }
 
   return (
-    <main className="relative w-screen h-screen overflow-hidden bg-[#F8F7F4] text-[#18181B] select-none">
+    <main className="relative w-screen h-screen overflow-hidden bg-[#F8F7F4] dark:bg-[#121215] text-[#18181B] dark:text-[#F4F4F5] select-none transition-colors duration-200">
       {/* Top Floating App Bar */}
       <TopBar
         onOpenShortcuts={() => setShortcutsOpen(true)}

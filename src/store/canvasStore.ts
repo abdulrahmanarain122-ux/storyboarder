@@ -90,7 +90,9 @@ interface CanvasState {
   resetViewport: () => void;
   fitToView: (containerWidth: number, containerHeight: number) => void;
 
-  // Interaction modes
+  // Interaction modes & theme
+  theme: 'light' | 'dark';
+  toggleTheme: () => void;
   setActiveTool: (tool: CanvasTool) => void;
   setSpacePressed: (pressed: boolean) => void;
   setIsPanning: (panning: boolean) => void;
@@ -233,6 +235,21 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
   isInitialized: false,
   saveStatus: 'saved',
   notification: null,
+
+  theme:
+    typeof localStorage !== 'undefined' && localStorage.getItem('storyboarder-theme') === 'dark'
+      ? 'dark'
+      : 'light',
+  toggleTheme: () => {
+    const next = get().theme === 'light' ? 'dark' : 'light';
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('storyboarder-theme', next);
+    }
+    if (typeof document !== 'undefined') {
+      document.documentElement.classList.toggle('dark', next === 'dark');
+    }
+    set({ theme: next });
+  },
 
   activeView: 'projects',
   currentBoardId: 'default-board',

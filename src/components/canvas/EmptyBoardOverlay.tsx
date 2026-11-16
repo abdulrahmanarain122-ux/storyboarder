@@ -9,6 +9,7 @@ export const EmptyBoardOverlay: React.FC = () => {
   const updateFrame = useCanvasStore((s) => s.updateFrame);
   const addCard = useCanvasStore((s) => s.addCard);
   const updateCard = useCanvasStore((s) => s.updateCard);
+  const theme = useCanvasStore((s) => s.theme);
   const clearSelection = useCanvasStore((s) => s.clearSelection);
   const fitToView = useCanvasStore((s) => s.fitToView);
 
@@ -96,10 +97,18 @@ export const EmptyBoardOverlay: React.FC = () => {
           <p className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-[#C93B1D]">
             Local-First Spatial Studio
           </p>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#18181B]">
+          <h1
+            className={`text-2xl sm:text-3xl font-bold tracking-tight ${
+              theme === 'dark' ? 'text-[#F4F4F5]' : 'text-[#18181B]'
+            }`}
+          >
             Your canvas is ready.
           </h1>
-          <p className="text-xs sm:text-sm text-[#52525B] max-w-md mx-auto leading-relaxed">
+          <p
+            className={`text-xs sm:text-sm max-w-md mx-auto leading-relaxed ${
+              theme === 'dark' ? 'text-[#A1A1AA]' : 'text-[#52525B]'
+            }`}
+          >
             Drag &amp; drop images, videos, or audio anywhere, paste with{' '}
             <kbd className="px-1.5 py-0.5 rounded bg-[#FFFFFF] border border-black/12 text-[11px] font-mono text-[#18181B]">
               Ctrl+V
